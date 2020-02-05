@@ -1,0 +1,23 @@
+kind: pipeline
+name: update-image
+
+steps:
+- name: publish
+  image: plugins/docker
+  settings:
+    dockerfile: Dockerfile
+    repo: cekrdoso/registry-gc
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    tags:
+    - latest
+    - '${DRONE_TAG}'
+  when:
+    ref:
+    - "refs/tags/**"
+
+trigger:
+  ref:
+  - "refs/tags/**"
