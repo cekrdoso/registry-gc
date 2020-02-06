@@ -7,7 +7,9 @@ GARBAGE_COLLECT_SCHEDULE=${GARBAGE_COLLECT_SCHEDULE-}
 exec_gc() {
     echo "$(date) Executando garbage collect ..."
     registry garbage-collect -m /etc/docker/registry/config.yml 2>&1 | \
-        grep -q "Deleting blob" && sleep 5 && kill -HUP 1
+        tee -a /proc/1/fd/1 | \
+        grep -q "Deleting blob" && \
+        sleep 5 && kill -HUP 1
 }
 
 [ "${ENABLE_GARBAGE_COLLECT}" != "true" ] && exit 0
